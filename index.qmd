@@ -1,0 +1,23 @@
+---
+title: "Ariel Beccar"
+subtitle: "Data Scientist"
+# `profile.jpg` photo by Jan Tinneberg on https://unsplash.com
+image: profile.jpg.png
+about: # https://quarto.org/docs/websites/website-about.html
+  template: jolla
+  image-shape: round
+  links:
+    - icon: github
+      text: Github
+      href: https://github.com/abeccar
+    - icon: linkedin
+      text: LinkedIn
+      href: https://linkedin.com/in/ariel-beccar-8b8390211/
+---
+
+Currently a dual degree pursuer at CSUF, with interests in data science, actuarial science, and bio statistics.
+
+## Education
+
+California State University Fullerton, Fullerton, CA \| BA Probability and Statistics, BS Molecular Biology \| Aug 2020 - June 2027
+

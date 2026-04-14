@@ -4,13 +4,13 @@ project:
   render: 
     - index.qmd
     - about.qmd
-    - project 2. qmd
+    - project 2.qmd
 website:
   title: "Home"
   open-graph: true # https://quarto.org/docs/websites/website-tools.html#open-graph
   page-footer: "Made with ❤️ and Quarto"
   navbar:
-    right:
+    left:
       - text: Home
         href: index.qmd
       - href: project 2.qmd

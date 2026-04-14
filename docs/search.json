@@ -1,10 +1,10 @@
 [
   {
-    "objectID": "about.html",
-    "href": "about.html",
-    "title": "About",
+    "objectID": "project 2.html",
+    "href": "project 2.html",
+    "title": "Project 2",
     "section": "",
-    "text": "About this site\n\n1 + 1\n\n[1] 2"
+    "text": "This page will contain my math 437 final project"
   },
   {
     "objectID": "index.html",
@@ -19,5 +19,12 @@
     "title": "Ariel Beccar",
     "section": "Education",
     "text": "Education\nCalifornia State University Fullerton, Fullerton, CA | BA Probability and Statistics, BS Molecular Biology | Aug 2020 - June 2027"
+  },
+  {
+    "objectID": "about.html",
+    "href": "about.html",
+    "title": "About",
+    "section": "",
+    "text": "About this site\n\n1 + 1\n\n[1] 2"
   }
 ]

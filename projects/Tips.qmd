@@ -131,25 +131,48 @@ ggplot(tips, aes(x = total_bill, y = tip/total_bill, color = sex)) + geom_point(
 
 Unsupervised Learning
 
-\`\`\`{#\| label: Model based clustering: k means clustering}
+```{r}
 
-#k means clustering using tidy models kmeans_model \<- k_means(num_clusters=tune()) \|\> set_args(nstart=20)
+#k means clustering using tidy models
+kmeans_model <- k_means(num_clusters=tune()) |>
+  set_args(nstart=20)
 
-kmeans_recipe \<- recipe(
+kmeans_recipe <- recipe(
+  ~ total_bill+tip+sex+smoker+day+time+size,data=tips) |>
+  step_dummy(sex,smoker,day,time)|> #because of categorical variables
+  step_normalize(all_predictors()) #scales our numerical predictors
+  
 
-:   total_bill+tip+sex+smoker+day+time+size,data=tips) \|\> step_dummy(sex,smoker,day,time)\|\> #because of categorical variables step_normalize(all_predictors()) #scales our numerical predictors
-
-kmeans_wflow \<- workflow() \|\> add_model(kmeans_model) \|\> add_recipe(kmeans_recipe) #5 fold cross validation set.seed(123) kmeans_kfold \<- vfold_cv( data=tips_train, v=5,repeats=1 ) nclusters_grid \<- data.frame(num_clusters = seq(1,10)) kmeans_tuned \<- tune_cluster( kmeans_wflow, resamples = kmeans_kfold, grid=nclusters_grid, metrics = cluster_metric_set( sse_total, #should be the same total sse for all values of k sse_within_total, #should decrease as k increases sse_ratio #sse within/sse total
-
-) ) tuned_metrics \<- collect_metrics(kmeans_tuned) #tibble with all our metrics
-
-```         
+  kmeans_wflow <- workflow() |>
+  add_model(kmeans_model) |>
+  add_recipe(kmeans_recipe)
+#5 fold cross validation
+  set.seed(123)
+kmeans_kfold <- vfold_cv(
+  data=tips_train,
+  v=5,repeats=1
+)
+nclusters_grid <- data.frame(num_clusters = seq(1,10))
+kmeans_tuned <- tune_cluster(
+  kmeans_wflow,
+  resamples = kmeans_kfold,
+  grid=nclusters_grid,
+  metrics = cluster_metric_set(
+    sse_total, #should be the same total sse for all values of k
+    sse_within_total, #should decrease as k increases
+    sse_ratio #sse within/sse total
+    
+  )
+)
+tuned_metrics <- collect_metrics(kmeans_tuned)
+tuned_metrics #tibble with all our metrics
+```
 
 In order to preform k means clustering i set to create a model that tunes the number of clusters by using 20 random points resulting in keeping the best clustering results. Then using a tidy models work flow and recipe making sure to account for the categorical variables and rescaling the numerical variables. Lastly we completed a 5 fold cross validation on the training set to evaluate clustering performance across different values of k. Then we created a tibble that contained the total variation within the data (sse_total), the variation within the clusters (sse_within_total) and the variation ratio (sse_ratio).
 
 Over all k means clustering was used to try and identify natural groupings within this data. First i needed to determine the optimal number of K clusters from 1-10 which was done by using a 5 fold cross validation. This 5 fold cross validation is a technique that separates the training data set into 5 equal sized groups (folds). Then 4 of the folds are used for training the data and the last fold is used for testing. This process is then repeated until each fold has been both trained and tested on. This resulted in an optimal number of K clusters of 4, which is also seen in the plot below. Next each observation is assigned to the nearest cluster center (centroid). Then each center is updated as the mean of its assigned observations and observations are then again assigned to the closest centroid. This process is repeated until clusters are distinct and separated as much as possible.
 
-```{#| label: scree-plot}
+```{r}
 #choosing our metric to create a scree plot and determine the number of clusters optimal for the model
 tuned_metrics |>
   filter(.metric == "sse_ratio") |>
@@ -160,13 +183,16 @@ tuned_metrics |>
 #the elbow of the scree plot is around 4 thus that is the amount of clusters we will choose
 ```
 
-\`\`\`{#\| label: Finalize workflow}
+```{r}
 
-#finalizing the model based on 4 clusters kmeans_4clusters \<-kmeans_wflow \|\> finalize_workflow_tidyclust( parameters = list(num_clusters=4) )
+#finalizing the model based on 4 clusters
+kmeans_4clusters <-kmeans_wflow |>
+  finalize_workflow_tidyclust(
+    parameters = list(num_clusters=4)
+  )
+```
 
-```         
-
-```{#| label: Fitting the model based on chosen number of clusters}
+```{r}
 set.seed(123)
 #now we fit our model based on 4 clusters
 kmeans_fit <- kmeans_4clusters |>
@@ -180,7 +206,16 @@ cluster_assignments <- bind_cols(
 head(cluster_assignments)
 ```
 
-`{#| label: Plotting the cluster assignments} ggpairs(   cluster_assignments,   columns = c("total_bill","tip","sex","smoker","day","time","size"),   lower=list(continuous="points"),   upper = list(continuous="points"),   aes(color=.cluster))`
+```{r}
+#plotting the cluster assignments
+ggpairs(
+  cluster_assignments,
+  columns = c("total_bill","tip","sex","smoker","day","time","size"),
+  lower=list(continuous="points"),
+  upper = list(continuous="points"),
+  aes(color=.cluster))
+
+```
 
 Based on this pairwise visualization we can see that each cluster is separated mainly by: total bill, tip, and table size. This suggests that the clusters may be motivated by spending behavior and not by personal characteristics (smoking, sex/gender, time of day). When interpreting the clusters we can see low bills, tips and smaller table sizes are grouped in the blue cluster. Moderate bills, tips and table sizes are grouped by the green cluster. High spenders with high bill totals, tips and table sizes are grouped in the purple cluster. The orange cluster is shown to be the most overlapped and may represent the cluster with high variability and includes the observations that were between medium and high spending and lower/average tips.
 

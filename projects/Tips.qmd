@@ -132,7 +132,6 @@ ggplot(tips, aes(x = total_bill, y = tip/total_bill, color = sex)) + geom_point(
 Unsupervised Learning
 
 ```{r}
-
 #k means clustering using tidy models
 kmeans_model <- k_means(num_clusters=tune()) |>
   set_args(nstart=20)

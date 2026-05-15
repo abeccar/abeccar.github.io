@@ -14,7 +14,7 @@ The main objective of this analysis is to determine if there are any patterns ba
 #| label: do this first
 #| echo: false
 #| message: false
-here::i_am("Tips.qmd")
+here::i_am("projects/Tips.qmd")
 ```
 
 As someone who's worked in the restuarant industry for several years i have identified patterns based on individual experiences. Most notably tipping tends to rely on a percentage of the total bill. Larger table sizes tend to have larger bill sizes and thus larger tips. And anecdotally men in particular tend to tip more than woman. In this analysis we wish to explore the merit behind my own individual biases and explore notable dining patterns expressed in the "Tips" data set.
@@ -40,7 +40,7 @@ library(GGally)
 You should follow the template table below. Each row of the table contains the package name in brackets, a link to the package website, and (on the right side) a description of what you used the package for. If you can't find a link to the package website, or you're having trouble getting the link to work, don't worry about including it.
 
 | Package | Use |
-|----|----|
+|--------------------------------|----------------------------------------|
 | [here](https://github.com/jennybc/here_here) | to easily load and save data |
 | [readr](https://readr.tidyverse.org/) | to import the CSV file data |
 | [dplyr](https://dplyr.tidyverse.org/) | to massage and summarize data |
